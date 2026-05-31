@@ -45,17 +45,25 @@ const REVIEWER_SCHEMA = {
 }
 
 // Helpers (must be inline — script body cannot import Node.js APIs)
+// Use raw-string schemas + JSON.parse to avoid type coercion bugs (object-schema returned all values as strings).
 async function readState() {
-  const out = await agent(
-    `Bruk Read-tool på ${STATE_PATH}. Returner JSON-innholdet som JS-objekt.`,
-    { label: 'state:read', schema: { type: 'object', additionalProperties: true } },
+  const raw = await agent(
+    `Bruk Bash til å kjøre: cat ${STATE_PATH}\nReturner KUN det rå JSON-innholdet (ingen markdown, ingen kode-fence, ingen forklaring) — bare strengen mellom { og }.`,
+    { label: 'state:read', schema: { type: 'string' } },
   )
-  return out
+  const parsed = JSON.parse(raw)
+  return {
+    startedAt: Number(parsed.startedAt ?? 0),
+    round: Number(parsed.round ?? 0),
+    manualStop: Boolean(parsed.manualStop),
+    verdictHistory: Array.isArray(parsed.verdictHistory) ? parsed.verdictHistory : [],
+  }
 }
 
 async function writeState(state) {
+  const json = JSON.stringify(state, null, 2)
   await agent(
-    `Bruk Write-tool på ${STATE_PATH} med dette innholdet:\n\`\`\`json\n${JSON.stringify(state, null, 2)}\n\`\`\``,
+    `Bruk Write-tool til å overskrive filen ${STATE_PATH} med EKSAKT dette JSON-innholdet. Hvis Write krever Read først, gjør det, og skriv deretter overskrivelsen.\n\nInnhold:\n${json}`,
     { label: 'state:write' },
   )
 }
