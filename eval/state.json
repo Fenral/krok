@@ -1,6 +1,8 @@
 {
-  "startedAt": 0,
-  "round": 0,
+  "startedAt": 1780220643538,
+  "round": 1,
   "manualStop": false,
-  "verdictHistory": []
+  "verdictHistory": [
+    "RED"
+  ]
 }
