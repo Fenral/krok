@@ -82,7 +82,7 @@ export default function App() {
             {!isLoginRoute && (
               <Link
                 to="/login"
-                className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                className="rounded-md border border-sky-400/60 bg-transparent px-3 py-2 text-sm font-semibold text-sky-300 transition-colors hover:bg-sky-500/10 hover:text-sky-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Logg inn
               </Link>
@@ -133,11 +133,15 @@ export default function App() {
           <Route path="*" element={<IkkeFunnet />} />
         </Routes>
       </main>
-      <footer className="mt-12 border-t border-slate-800 bg-slate-950/80">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-slate-400 md:flex-row md:items-center md:justify-between md:px-6">
-          <p>&copy; 2026 Krok — norsk fiskedagbok</p>
+      <footer className="mt-12 border-t border-slate-900 bg-slate-950/90">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-xs text-slate-300 md:flex-row md:items-center md:justify-between md:px-6">
+          <p>
+            &copy; 2026{' '}
+            <span className="font-semibold text-slate-100">Krok</span> — norsk
+            fiskedagbok
+          </p>
           <nav aria-label="Sekundær">
-            <ul className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <ul className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {footerItems.map((item, idx) => (
                 <Fragment key={item.to}>
                   {idx > 0 && (
@@ -148,7 +152,7 @@ export default function App() {
                   <li>
                     <Link
                       to={item.to}
-                      className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                      className="rounded text-slate-300 underline-offset-4 transition-colors hover:text-slate-100 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                     >
                       {item.label}
                     </Link>

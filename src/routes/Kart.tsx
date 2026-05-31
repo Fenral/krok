@@ -1,168 +1,192 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import HookIcon from '../components/HookIcon'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 type View = 'map' | 'list'
 
+// Demo: ingen fangster i denne runden. Vi viser eksplisitt empty-state
+// uten kart-shell — Sivert + reviewer-feedback: tom kart-canvas konkurrerer
+// med modalet og lurer brukeren til å lete etter pins som ikke finnes.
+const fangster: Array<{
+  id: string
+  dato: string
+  art: string
+  sted: string
+  vekt: string
+}> = []
+
 export default function Kart() {
   useDocumentTitle('Fangstkart — Krok')
   const [view, setView] = useState<View>('map')
+  const harFangster = fangster.length > 0
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-12">
       <PageHeader
         titleId="kart-title"
         title="Fangstkart"
-        description="Se hvor fangstene er gjort. Bytt til Liste for full tilgjengelighet med skjermleser eller tastatur."
+        description="Se hvor fangstene er gjort."
       />
+      {/* A11y-jargon skjult fra synlige brukere — kommuniseres til skjermleser
+          via sr-only-tekst lenger ned + selve tab-mønsteret. */}
+      <p className="sr-only">
+        Bytt til Liste-fanen for et tilgjengelig alternativ via skjermleser
+        eller tastatur.
+      </p>
 
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40">
-        <div
-          role="tablist"
-          aria-label="Visningstype"
-          className="absolute right-3 top-3 z-10 inline-flex rounded-md border border-slate-700 bg-slate-950/80 p-1 backdrop-blur"
-        >
-          <button
-            id="tab-kart"
-            role="tab"
-            type="button"
-            aria-selected={view === 'map'}
-            aria-controls="kart-panel"
-            onClick={() => setView('map')}
-            className={[
-              'rounded px-3 py-1.5 text-sm font-medium transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
-              view === 'map'
-                ? 'bg-sky-500 text-slate-950'
-                : 'text-slate-300 hover:text-slate-100',
-            ].join(' ')}
-          >
-            Kart
-          </button>
-          <button
-            id="tab-liste"
-            role="tab"
-            type="button"
-            aria-selected={view === 'list'}
-            aria-controls="liste-panel"
-            onClick={() => setView('list')}
-            className={[
-              'rounded px-3 py-1.5 text-sm font-medium transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
-              view === 'list'
-                ? 'bg-sky-500 text-slate-950'
-                : 'text-slate-300 hover:text-slate-100',
-            ].join(' ')}
-          >
-            Liste
-          </button>
-        </div>
-
-        <section
-          id="kart-panel"
-          role="tabpanel"
-          aria-labelledby="tab-kart"
-          hidden={view !== 'map'}
-        >
-          <h2 className="sr-only">Kartvisning</h2>
+      {harFangster ? (
+        // Med data: kart-shell + tabs som primær-IA rett under h1 (ikke gjemt
+        // i hjørnet av kart-chrome).
+        <div className="space-y-4">
           <div
-            role="application"
-            aria-label="Interaktivt kart — tomt, ingen fangster &aring; vise enn&aring;"
-            className="relative h-[420px] overflow-hidden bg-slate-950"
+            role="tablist"
+            aria-label="Visningstype"
+            className="inline-flex rounded-md border border-slate-700 bg-slate-900/60 p-1"
           >
-            {/* Topografisk SVG-tekstur som signaliserer "kart" uten å love tiles vi ikke har enda. */}
-            <svg
-              aria-hidden="true"
-              focusable="false"
-              className="absolute inset-0 h-full w-full opacity-40"
-              viewBox="0 0 400 280"
-              preserveAspectRatio="none"
-              fill="none"
-              stroke="rgb(56,189,248)"
-              strokeWidth="0.6"
-            >
-              <path d="M-20 60 Q 80 30 170 80 T 420 60" strokeOpacity="0.35" />
-              <path d="M-20 110 Q 100 80 180 130 T 420 110" strokeOpacity="0.35" />
-              <path d="M-20 160 Q 110 130 200 180 T 420 160" strokeOpacity="0.35" />
-              <path d="M-20 210 Q 130 180 220 230 T 420 210" strokeOpacity="0.35" />
-              <path d="M-20 260 Q 150 230 240 280 T 420 260" strokeOpacity="0.35" />
-              <path d="M-20 30 Q 70 0 160 50 T 420 30" strokeOpacity="0.2" />
-            </svg>
-            <div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle at 30% 40%, rgba(56,189,248,0.18), transparent 55%), radial-gradient(circle at 70% 70%, rgba(16,185,129,0.12), transparent 55%)',
-              }}
-            />
-            <div className="relative flex h-full items-center justify-center p-6 text-center">
-              <div className="max-w-sm rounded-xl bg-slate-950/70 px-5 py-4 ring-1 ring-slate-800/80 backdrop-blur">
-                <p className="text-base font-semibold text-slate-100">
-                  Ingen fangster &aring; vise enn&aring;
-                </p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Logg din f&oslash;rste fangst, s&aring; dukker den opp her med pin og
-                  detaljer.
-                </p>
-                <a
-                  href="/logg/ny"
-                  className="mt-4 inline-flex items-center justify-center rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                >
-                  Logg fangst
-                </a>
-              </div>
-            </div>
+            <Tab id="tab-kart" active={view === 'map'} controls="kart-panel" onClick={() => setView('map')}>
+              Kart
+            </Tab>
+            <Tab id="tab-liste" active={view === 'list'} controls="liste-panel" onClick={() => setView('list')}>
+              Liste
+            </Tab>
           </div>
-          {/* sr-only fallback — visuelle brukere ser allerede Liste-fanen øverst i kortet. */}
-          <p className="sr-only">
-            Kartet er ikke tilgjengelig for skjermleser. Bytt til Liste-fanen for et
-            tilgjengelig alternativ.
-          </p>
-        </section>
 
+          <section
+            id="kart-panel"
+            role="tabpanel"
+            aria-labelledby="tab-kart"
+            hidden={view !== 'map'}
+          >
+            <h2 className="sr-only">Kartvisning</h2>
+            <div
+              role="application"
+              aria-label={`Interaktivt kart med ${fangster.length} fangst-pins`}
+              className="h-[420px] rounded-2xl border border-slate-800 bg-slate-900/40"
+            />
+          </section>
+
+          <section
+            id="liste-panel"
+            role="tabpanel"
+            aria-labelledby="tab-liste"
+            hidden={view !== 'list'}
+          >
+            <h2 className="sr-only">Fangster (listevisning)</h2>
+            <div className="overflow-x-auto rounded-2xl border border-slate-800">
+              <table className="w-full text-left text-sm text-slate-200">
+                <caption className="sr-only">
+                  {fangster.length} fangster sortert etter dato
+                </caption>
+                <thead className="bg-slate-900/60 text-xs uppercase tracking-wide text-slate-400">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-medium">Dato</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Art</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Sted</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Vekt</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {fangster.map((f) => (
+                    <tr key={f.id}>
+                      <td className="px-4 py-3">{f.dato}</td>
+                      <td className="px-4 py-3 text-slate-100">{f.art}</td>
+                      <td className="px-4 py-3">{f.sted}</td>
+                      <td className="px-4 py-3">{f.vekt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      ) : (
+        // Empty-state: ren, sentrert, ingen falsk kart-canvas under.
         <section
-          id="liste-panel"
-          role="tabpanel"
-          aria-labelledby="tab-liste"
-          hidden={view !== 'list'}
+          aria-labelledby="kart-empty-tittel"
+          className="rounded-2xl border border-dashed border-sky-900/60 bg-slate-900/30 p-10 text-center"
         >
-          <h2 className="sr-only">Fangster (listevisning)</h2>
-          <div className="overflow-x-auto p-4 md:p-6">
-            <table className="w-full text-left text-sm text-slate-200">
-              <caption className="mb-3 text-left text-base font-semibold text-slate-100">
-                Fangster (listevisning)
-                <span className="ml-2 text-sm font-normal text-slate-400">
-                  — ingen fangster enn&aring;
-                </span>
-              </caption>
-              <thead className="bg-slate-900/60 text-xs uppercase tracking-wide text-slate-400">
-                <tr>
-                  <th scope="col" className="px-4 py-3 font-medium">
-                    Dato
-                  </th>
-                  <th scope="col" className="px-4 py-3 font-medium">
-                    Art
-                  </th>
-                  <th scope="col" className="px-4 py-3 font-medium">
-                    Sted
-                  </th>
-                  <th scope="col" className="px-4 py-3 font-medium">
-                    Vekt
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
-                    Logg din f&oslash;rste fangst — s&aring; bygges listen automatisk.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-slate-900 ring-1 ring-sky-500/30">
+            <KartPinIkon className="h-9 w-9 text-sky-300" />
+          </div>
+          <h2
+            id="kart-empty-tittel"
+            className="mt-5 text-xl font-semibold text-slate-100"
+          >
+            Ingen fangster &aring; vise enn&aring;
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-slate-300">
+            Logg din f&oslash;rste fangst, s&aring; dukker den opp her med pin og
+            detaljer. Kartet aktiveres automatisk n&aring;r du har minst &eacute;n
+            fangst med posisjon.
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link
+              to="/logg/ny"
+              className="inline-flex items-center gap-2 rounded-md bg-sky-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 active:translate-y-px active:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              <HookIcon className="h-4 w-4" />
+              Logg f&oslash;rste fangst
+            </Link>
+            <Link
+              to="/arter"
+              className="text-sm font-medium text-slate-300 underline-offset-4 hover:text-slate-100 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              Eller bla i artsdatabasen &rarr;
+            </Link>
           </div>
         </section>
-      </div>
+      )}
     </div>
+  )
+}
+
+type TabProps = {
+  id: string
+  active: boolean
+  controls: string
+  onClick: () => void
+  children: React.ReactNode
+}
+
+function Tab({ id, active, controls, onClick, children }: TabProps) {
+  return (
+    <button
+      id={id}
+      role="tab"
+      type="button"
+      aria-selected={active}
+      aria-controls={controls}
+      onClick={onClick}
+      className={[
+        'rounded px-4 py-1.5 text-sm font-medium transition-colors',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+        active
+          ? 'bg-slate-800 text-sky-300 ring-1 ring-inset ring-sky-400/40'
+          : 'text-slate-300 hover:text-slate-100',
+      ].join(' ')}
+    >
+      {children}
+    </button>
+  )
+}
+
+function KartPinIkon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z" />
+      <circle cx="12" cy="9" r="2.5" />
+    </svg>
   )
 }
