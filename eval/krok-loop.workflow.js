@@ -76,9 +76,8 @@ async function shell(cmd, label) {
 // MAIN LOOP
 let state = await readState()
 if (state.startedAt === 0) {
-  state.startedAt = Math.floor(Date.now() / 1) // (Date.now blokkert i Workflow — bruker placeholder; se note)
-  // FALLBACK: vi bruker en agent til å hente timestamp
-  const ts = await agent('Bruk Bash til å kjøre: node -e "console.log(Date.now())". Returner kun tallet som integer.', { label: 'now', schema: { type: 'integer' } })
+  // Date.now() er blokkert i Workflow-scripts (vil brekke resume). Henter via agent.
+  const ts = await agent('Bruk Bash til å kjøre: node -e "console.log(Date.now())". Returner KUN tallet som integer.', { label: 'now', schema: { type: 'integer' } })
   state.startedAt = ts
   await writeState(state)
 }
