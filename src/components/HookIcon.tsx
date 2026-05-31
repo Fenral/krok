@@ -3,6 +3,13 @@ type HookIconProps = {
   title?: string
 }
 
+/**
+ * Fiskekrok-glyph for Krok-merket. Tegnet med tydelig:
+ *  - rett øvre skaft (eye/ring),
+ *  - lang nedre kurve (bend),
+ *  - oppoverbøyd point + barb (motkrok),
+ * slik at silhuetten leses som «krok», ikke som bokstaven J.
+ */
 export default function HookIcon({ className, title }: HookIconProps) {
   return (
     <svg
@@ -18,8 +25,12 @@ export default function HookIcon({ className, title }: HookIconProps) {
       aria-label={title}
       focusable="false"
     >
-      <path d="M14 4v9a5 5 0 1 1-10 0" />
-      <circle cx="14" cy="3.5" r="1.25" fill="currentColor" stroke="none" />
+      {/* Eye/ring øverst */}
+      <circle cx="14" cy="3.5" r="1.5" />
+      {/* Skaft + kurve + spids */}
+      <path d="M14 5v8a5 5 0 1 1-10 0V11" />
+      {/* Barb / motkrok som peker oppover-utover fra spidsen */}
+      <path d="M4 11l3-1.5" />
     </svg>
   )
 }

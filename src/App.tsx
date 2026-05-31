@@ -1,20 +1,30 @@
-import { Routes, Route, NavLink, Link } from 'react-router-dom'
+import { Routes, Route, NavLink, Link, useLocation } from 'react-router-dom'
+import Hjem from './routes/Hjem'
 import Login from './routes/Login'
 import Logg from './routes/Logg'
 import Kart from './routes/Kart'
 import Arter from './routes/Arter'
 import Profil from './routes/Profil'
 import NyFangst from './routes/NyFangst'
+import Om from './routes/Om'
+import Personvern from './routes/Personvern'
+import Vilkar from './routes/Vilkar'
+import Kontakt from './routes/Kontakt'
+import IkkeFunnet from './routes/IkkeFunnet'
 import HookIcon from './components/HookIcon'
 
 const navItems = [
-  { to: '/logg', label: 'Logg' },
-  { to: '/kart', label: 'Kart' },
-  { to: '/arter', label: 'Arter' },
-  { to: '/profil', label: 'Profil' },
+  { to: '/', label: 'Hjem', end: true },
+  { to: '/logg', label: 'Fangster', end: false },
+  { to: '/kart', label: 'Kart', end: false },
+  { to: '/arter', label: 'Arter', end: false },
+  { to: '/profil', label: 'Profil', end: false },
 ]
 
 export default function App() {
+  const location = useLocation()
+  const isLoginRoute = location.pathname.startsWith('/login')
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
       <a
@@ -42,7 +52,7 @@ export default function App() {
                 <li key={item.to}>
                   <NavLink
                     to={item.to}
-                    end={item.to === '/logg'}
+                    end={item.end}
                     className={({ isActive }) =>
                       [
                         'rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -60,18 +70,14 @@ export default function App() {
             </ul>
           </nav>
           <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-            >
-              Logg inn
-            </Link>
-            <Link
-              to="/login"
-              className="hidden rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:inline-flex"
-            >
-              Opprett konto
-            </Link>
+            {!isLoginRoute && (
+              <Link
+                to="/login"
+                className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              >
+                Logg inn
+              </Link>
+            )}
           </div>
         </div>
         <nav
@@ -83,7 +89,7 @@ export default function App() {
               <li key={item.to}>
                 <NavLink
                   to={item.to}
-                  end={item.to === '/logg'}
+                  end={item.end}
                   className={({ isActive }) =>
                     [
                       'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap',
@@ -103,13 +109,18 @@ export default function App() {
       </header>
       <main id="main" className="flex-1">
         <Routes>
-          <Route path="/" element={<Logg />} />
+          <Route path="/" element={<Hjem />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logg" element={<Logg />} />
           <Route path="/logg/ny" element={<NyFangst />} />
           <Route path="/kart" element={<Kart />} />
           <Route path="/arter" element={<Arter />} />
           <Route path="/profil" element={<Profil />} />
+          <Route path="/om" element={<Om />} />
+          <Route path="/personvern" element={<Personvern />} />
+          <Route path="/vilkar" element={<Vilkar />} />
+          <Route path="/kontakt" element={<Kontakt />} />
+          <Route path="*" element={<IkkeFunnet />} />
         </Routes>
       </main>
       <footer className="mt-12 border-t border-slate-800 bg-slate-950/80">
@@ -117,36 +128,36 @@ export default function App() {
           <p>&copy; 2026 Krok — norsk fiskedagbok</p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             <li>
-              <a
-                href="#om"
-                className="rounded transition-colors hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              <Link
+                to="/om"
+                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Om
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#personvern"
-                className="rounded transition-colors hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              <Link
+                to="/personvern"
+                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Personvern
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#vilkar"
-                className="rounded transition-colors hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              <Link
+                to="/vilkar"
+                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Vilk&aring;r
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="mailto:hei@krok.no"
-                className="rounded transition-colors hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              <Link
+                to="/kontakt"
+                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Kontakt
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

@@ -12,6 +12,13 @@ function renderAt(path: string) {
 }
 
 describe('route → h1 smoke-tests', () => {
+  it('/ viser h1 "Krok — din norske fiskedagbok"', () => {
+    renderAt('/')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /krok — din norske fiskedagbok/i }),
+    ).toBeInTheDocument()
+  })
+
   it('/login viser h1 "Logg inn på Krok"', () => {
     renderAt('/login')
     expect(
@@ -19,10 +26,10 @@ describe('route → h1 smoke-tests', () => {
     ).toBeInTheDocument()
   })
 
-  it('/logg viser h1 "Min fangstlogg"', () => {
+  it('/logg viser h1 "Mine fangster"', () => {
     renderAt('/logg')
     expect(
-      screen.getByRole('heading', { level: 1, name: /min fangstlogg/i }),
+      screen.getByRole('heading', { level: 1, name: /mine fangster/i }),
     ).toBeInTheDocument()
   })
 
@@ -52,6 +59,78 @@ describe('route → h1 smoke-tests', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: /^profil$/i }),
     ).toBeInTheDocument()
+  })
+
+  it('/om viser h1 "Om Krok"', () => {
+    renderAt('/om')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /om krok/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('/personvern viser h1 "Personvern"', () => {
+    renderAt('/personvern')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /^personvern$/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('/vilkar viser h1 "Vilkår for bruk"', () => {
+    renderAt('/vilkar')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /vilkår for bruk/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('/kontakt viser h1 "Kontakt oss"', () => {
+    renderAt('/kontakt')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /kontakt oss/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('ukjent rute viser h1 "Siden finnes ikke"', () => {
+    renderAt('/finnes-ikke-12345')
+    expect(
+      screen.getByRole('heading', { level: 1, name: /siden finnes ikke/i }),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('navigasjon-aktiv-state', () => {
+  it('aktiv NavLink på /kart får aria-current="page"', () => {
+    renderAt('/kart')
+    const kartLinks = screen.getAllByRole('link', { name: /^kart$/i })
+    const aktiv = kartLinks.find((l) => l.getAttribute('aria-current') === 'page')
+    expect(aktiv).toBeDefined()
+  })
+
+  it('Hjem-link er aktiv på /', () => {
+    renderAt('/')
+    const hjemLinks = screen.getAllByRole('link', { name: /^hjem$/i })
+    const aktiv = hjemLinks.find((l) => l.getAttribute('aria-current') === 'page')
+    expect(aktiv).toBeDefined()
+  })
+
+  it('Fangster-link er aktiv på /logg', () => {
+    renderAt('/logg')
+    const links = screen.getAllByRole('link', { name: /^fangster$/i })
+    const aktiv = links.find((l) => l.getAttribute('aria-current') === 'page')
+    expect(aktiv).toBeDefined()
+  })
+})
+
+describe('footer-lenker peker til reelle ruter', () => {
+  it('Om-link peker til /om', () => {
+    renderAt('/logg')
+    const link = screen.getByRole('link', { name: /^om$/i })
+    expect(link).toHaveAttribute('href', '/om')
+  })
+
+  it('Personvern-link peker til /personvern', () => {
+    renderAt('/logg')
+    const link = screen.getByRole('link', { name: /^personvern$/i })
+    expect(link).toHaveAttribute('href', '/personvern')
   })
 })
 

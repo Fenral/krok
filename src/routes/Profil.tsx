@@ -1,5 +1,10 @@
+import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
+
+// Demo: ikke-innlogget tilstand i denne runden. Når auth er koblet til,
+// veksler vi innholdet i Min info-seksjonen.
+const ER_INNLOGGET = false
 
 export default function Profil() {
   useDocumentTitle('Profil — Krok')
@@ -29,18 +34,24 @@ export default function Profil() {
               aria-hidden="true"
               className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-800 text-3xl font-semibold text-sky-300"
             >
-              K
+              {ER_INNLOGGET ? 'S' : '?'}
             </div>
-            <p className="mt-4 text-lg font-medium text-slate-100">Gjest</p>
-            <p className="mt-1 text-sm text-slate-400">
-              Ikke logget inn enn&aring;
+            <p className="mt-4 text-lg font-medium text-slate-100">
+              {ER_INNLOGGET ? 'Sivert' : 'Gjest'}
             </p>
-            <a
-              href="/login"
-              className="mt-5 inline-flex items-center justify-center rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-            >
-              Logg inn
-            </a>
+            <p className="mt-1 text-sm text-slate-400">
+              {ER_INNLOGGET
+                ? 'Medlem siden mai 2026'
+                : 'Ikke logget inn ennå'}
+            </p>
+            {!ER_INNLOGGET && (
+              <Link
+                to="/login"
+                className="mt-5 inline-flex items-center justify-center rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 active:translate-y-px active:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              >
+                Logg inn for &aring; se profilen din
+              </Link>
+            )}
           </div>
         </section>
 

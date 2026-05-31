@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
 import PageHeader from '../components/PageHeader'
-import HookIcon from '../components/HookIcon'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function Login() {
@@ -25,19 +24,12 @@ export default function Login() {
     <div className="mx-auto max-w-md px-4 py-10 md:py-16">
       <PageHeader
         titleId="login-title"
-        eyebrow="Velkommen"
+        eyebrow="Logg inn"
         title="Logg inn på Krok"
-        description="Vi sender deg en magisk lenke på e-post. Ingen passord å huske."
+        description="Vi sender deg en magisk lenke p&aring; e-post. Ingen passord &aring; huske. Ny her? Skriv inn e-post — vi oppretter konto automatisk."
       />
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 shadow-lg shadow-slate-950/40">
-        <div className="mb-6 flex items-center gap-3 text-sky-300">
-          <HookIcon className="h-5 w-5" />
-          <span className="text-sm font-medium uppercase tracking-wide">
-            Magisk lenke
-          </span>
-        </div>
-
         {submitted ? (
           <div role="status" className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
             <p className="font-medium">Sjekk innboksen din</p>
@@ -86,14 +78,10 @@ export default function Login() {
 
             <button
               type="submit"
-              className="mt-5 inline-flex w-full items-center justify-center rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="mt-5 inline-flex w-full items-center justify-center rounded-md bg-sky-500 px-4 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 active:translate-y-px active:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               Send magisk lenke
             </button>
-
-            <p className="mt-4 text-center text-xs text-slate-400">
-              Ny her? Skriv inn e-post og vi oppretter konto automatisk.
-            </p>
           </form>
         )}
       </div>
