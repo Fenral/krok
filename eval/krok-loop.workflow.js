@@ -44,26 +44,33 @@ const REVIEWER_SCHEMA = {
   },
 }
 
-// Helpers (must be inline — script body cannot import Node.js APIs)
-// Use raw-string schemas + JSON.parse to avoid type coercion bugs (object-schema returned all values as strings).
+// Helpers — no schemas (schema-enforcement nudged agent away from raw output).
+// Parse defensively from raw text response.
+function extractJson(raw) {
+  // Find first { ... } block in the response. Handles agents that add chat-text before/after.
+  const match = String(raw).match(/\{[\s\S]*\}/)
+  if (!match) throw new Error('extractJson: no JSON object found in response: ' + String(raw).slice(0, 200))
+  return JSON.parse(match[0])
+}
+
 async function readState() {
   const raw = await agent(
-    `Bruk Bash til å kjøre: cat ${STATE_PATH}\nReturner KUN det rå JSON-innholdet (ingen markdown, ingen kode-fence, ingen forklaring) — bare strengen mellom { og }.`,
-    { label: 'state:read', schema: { type: 'string' } },
+    `Bruk Bash til å kjøre: cat ${STATE_PATH}\n\nReturner KUN det rå JSON-innholdet fra Bash-output. Ikke legg til markdown, kode-fence, eller forklaring.`,
+    { label: 'state:read' },
   )
-  const parsed = JSON.parse(raw)
+  const parsed = extractJson(raw)
   return {
     startedAt: Number(parsed.startedAt ?? 0),
     round: Number(parsed.round ?? 0),
-    manualStop: Boolean(parsed.manualStop),
+    manualStop: parsed.manualStop === true || parsed.manualStop === 'true',
     verdictHistory: Array.isArray(parsed.verdictHistory) ? parsed.verdictHistory : [],
   }
 }
 
 async function writeState(state) {
-  const json = JSON.stringify(state, null, 2)
+  const json = JSON.stringify(state, null, 2).replace(/'/g, "'\\''")
   await agent(
-    `Bruk Write-tool til å overskrive filen ${STATE_PATH} med EKSAKT dette JSON-innholdet. Hvis Write krever Read først, gjør det, og skriv deretter overskrivelsen.\n\nInnhold:\n${json}`,
+    `Bruk Bash til å skrive denne JSON-strengen til ${STATE_PATH} via:\n\ncat > ${STATE_PATH} <<'KROK_EOF'\n${json}\nKROK_EOF\n\nReturner kort: "ok".`,
     { label: 'state:write' },
   )
 }
@@ -81,12 +88,18 @@ async function shell(cmd, label) {
   })
 }
 
+// Helper for timestamp — Date.now() blokkert i Workflow-scripts.
+async function nowMs() {
+  const raw = await agent('Bruk Bash til å kjøre: node -e "console.log(Date.now())"\n\nReturner KUN tallet (ingen kommentar, ingen kode-fence).', { label: 'now' })
+  const m = String(raw).match(/\b(\d{13,16})\b/)
+  if (!m) throw new Error('nowMs: no timestamp in: ' + String(raw).slice(0, 200))
+  return Number(m[1])
+}
+
 // MAIN LOOP
 let state = await readState()
 if (state.startedAt === 0) {
-  // Date.now() er blokkert i Workflow-scripts (vil brekke resume). Henter via agent.
-  const ts = await agent('Bruk Bash til å kjøre: node -e "console.log(Date.now())". Returner KUN tallet som integer.', { label: 'now', schema: { type: 'integer' } })
-  state.startedAt = ts
+  state.startedAt = await nowMs()
   await writeState(state)
 }
 
@@ -104,7 +117,7 @@ while (true) {
     await ntfy('Krok-loop: STOPPED (manuell)')
     return { stopped: 'manual', state }
   }
-  const nowRes = await agent('Bash: node -e "console.log(Date.now())". Returner integer.', { label: 'now', schema: { type: 'integer' } })
+  const nowRes = await nowMs()
   if (nowRes - state.startedAt >= TEN_HOURS_MS) {
     await ntfy('Krok-loop: STOPPED (10t-vegg)')
     return { stopped: 'time-cap', state }
