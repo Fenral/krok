@@ -4,7 +4,10 @@ dist
 .env.local
 .krok-secrets/*
 !.krok-secrets/.gitkeep
-eval/reference/
+eval/reference/*
+!eval/reference/.gitkeep
+!eval/reference/INVENTORY.md
+!eval/reference/A11Y-BASELINE.md
 eval/screenshots/
 eval/state.json.bak
 *.log
