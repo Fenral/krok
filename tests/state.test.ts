@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs'
+import { describe, it, expect, afterEach } from 'vitest'
+import { unlinkSync, existsSync } from 'node:fs'
 import { readState, writeState, defaultState, type LoopState } from '../eval/state'
 
 const FIXTURE = 'eval/__test-state.json'
