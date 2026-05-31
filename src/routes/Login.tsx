@@ -24,7 +24,6 @@ export default function Login() {
     <div className="mx-auto max-w-md px-4 py-10 md:py-16">
       <PageHeader
         titleId="login-title"
-        eyebrow="Logg inn"
         title="Logg inn på Krok"
         description="Vi sender deg en magisk lenke p&aring; e-post. Ingen passord &aring; huske. Ny her? Skriv inn e-post — vi oppretter konto automatisk."
       />

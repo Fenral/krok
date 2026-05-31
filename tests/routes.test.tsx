@@ -26,10 +26,10 @@ describe('route → h1 smoke-tests', () => {
     ).toBeInTheDocument()
   })
 
-  it('/logg viser h1 "Mine fangster"', () => {
+  it('/logg viser h1 "Min fangstlogg"', () => {
     renderAt('/logg')
     expect(
-      screen.getByRole('heading', { level: 1, name: /mine fangster/i }),
+      screen.getByRole('heading', { level: 1, name: /min fangstlogg/i }),
     ).toBeInTheDocument()
   })
 
@@ -112,9 +112,9 @@ describe('navigasjon-aktiv-state', () => {
     expect(aktiv).toBeDefined()
   })
 
-  it('Fangster-link er aktiv på /logg', () => {
+  it('Logg-link er aktiv på /logg', () => {
     renderAt('/logg')
-    const links = screen.getAllByRole('link', { name: /^fangster$/i })
+    const links = screen.getAllByRole('link', { name: /^logg$/i })
     const aktiv = links.find((l) => l.getAttribute('aria-current') === 'page')
     expect(aktiv).toBeDefined()
   })

@@ -12,7 +12,15 @@ export const meta = {
 
 const STATE_PATH = 'eval/state.json'
 const TEN_HOURS_MS = 10 * 60 * 60 * 1000
-const ROUTES = ['/login', '/logg', '/logg/ny', '/kart', '/arter', '/profil']
+// route → (regex for h1 tekst, brukes til å verifisere at riktig side er rendret før screenshot)
+const ROUTES = [
+  { path: '/login', h1: 'Logg inn på Krok' },
+  { path: '/logg', h1: 'Min fangstlogg' },
+  { path: '/logg/ny', h1: 'Ny fangst' },
+  { path: '/kart', h1: 'Fangstkart' },
+  { path: '/arter', h1: 'Norske fiskearter' },
+  { path: '/profil', h1: 'Profil' },
+]
 const PREVIEW_URL = 'http://localhost:4173'
 
 const REVIEWERS = [
@@ -144,29 +152,56 @@ while (true) {
 
   phase('Screenshot')
 
-  const screenshotResults = await parallel(
-    ROUTES.map((route) => () =>
-      agent(
-        `Bruk Playwright MCP browser_navigate til ${PREVIEW_URL}${route}. Vent på network idle. Ta browser_take_screenshot, lagre til eval/screenshots/round-${state.round}${route.replace(/\//g, '_') || '_root'}.png. Returner JSON: {route: "${route}", screenshotPath: "<path>", consoleErrors: <antall console.error fra browser_console_messages>}.`,
-        {
-          label: `round-${state.round}:shot:${route}`,
-          phase: 'Screenshot',
-          schema: {
-            type: 'object',
-            required: ['route', 'screenshotPath', 'consoleErrors'],
-            properties: {
-              route: { type: 'string' },
-              screenshotPath: { type: 'string' },
-              consoleErrors: { type: 'integer' },
-            },
+  // Screenshots tas SEKVENSIELT — parallelle Playwright-kall mot samme
+  // browser-context i samme MCP-server forårsaket race-condition i runde 3
+  // der 4 av 6 screenshots ble samme frame (alle samme browser-tab byttet
+  // til siste URL før alle shots ble tatt). Sekvensiell + h1-verifisering
+  // garanterer at hver fil viser sin egen route.
+  const screenshotResults = []
+  for (const route of ROUTES) {
+    const fileName = `round-${state.round}${route.path.replace(/\//g, '_') || '_root'}.png`
+    const filePath = `eval/screenshots/${fileName}`
+    const res = await agent(
+      [
+        `Bruk Playwright MCP for å ta screenshot av ${PREVIEW_URL}${route.path}:`,
+        `1. browser_navigate til ${PREVIEW_URL}${route.path}`,
+        `2. browser_wait_for med text="${route.h1}" (timeout 10s) — verifiserer at riktig side er montert`,
+        `3. browser_evaluate: returner location.pathname og document.title — bekreft at pathname matcher "${route.path}" og at h1-tekst er "${route.h1}".`,
+        `4. browser_take_screenshot, lagre til ${filePath}`,
+        `5. Returner JSON: {route: "${route.path}", screenshotPath: "${filePath}", actualPath: "<location.pathname>", actualTitle: "<document.title>", consoleErrors: <antall console.error fra browser_console_messages>}.`,
+        `Hvis pathname ikke matcher eller h1 ikke finnes etter 10s: returner {route: "${route.path}", screenshotPath: null, error: "navigation failed or h1 mismatch", consoleErrors: <n>}.`,
+      ].join('\n'),
+      {
+        label: `round-${state.round}:shot:${route.path}`,
+        phase: 'Screenshot',
+        schema: {
+          type: 'object',
+          required: ['route', 'consoleErrors'],
+          properties: {
+            route: { type: 'string' },
+            screenshotPath: { type: ['string', 'null'] },
+            actualPath: { type: 'string' },
+            actualTitle: { type: 'string' },
+            error: { type: 'string' },
+            consoleErrors: { type: 'integer' },
           },
         },
-      ),
-    ),
-  )
+      },
+    )
+    screenshotResults.push(res)
+  }
 
-  const shotsTaken = screenshotResults.filter(Boolean)
+  const shotsTaken = screenshotResults.filter((r) => r && r.screenshotPath)
   log(`Runde ${state.round}: ${shotsTaken.length}/${ROUTES.length} screenshots`)
+
+  // Etter alle screenshots: verifiser at hver fil er unik (ikke duplikater).
+  // Hvis to filer har samme sha256, betyr det at navigasjon-pipelinen
+  // fortsatt har en bug — vi varsler men blokkerer ikke runden.
+  const dupeCheck = await agent(
+    `Bruk Bash til å sjekke at round-${state.round} screenshots er unike:\n\nfor f in eval/screenshots/round-${state.round}_*.png; do sha256sum "$f"; done | sort\n\nReturner kort: hvor mange unike hashes finnes, og hvilke filer som deler hash (hvis noen).`,
+    { label: `round-${state.round}:dupe-check` },
+  )
+  log(`Runde ${state.round} dupe-check: ${String(dupeCheck).slice(0, 300)}`)
 
   phase('Review')
 

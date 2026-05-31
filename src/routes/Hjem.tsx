@@ -12,7 +12,6 @@ export default function Hjem() {
     <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-14">
       <PageHeader
         titleId="hjem-title"
-        eyebrow="Hjem"
         title="Krok — din norske fiskedagbok"
         description="Logg fangstene dine, se dem på kartet, og bli kjent med norske fiskearter. Bygget for norske vann, regler og språk."
         actions={
@@ -35,8 +34,8 @@ export default function Hjem() {
         </h2>
         <Snarvei
           to="/logg"
-          eyebrow="Fangster"
-          title="Mine fangster"
+          eyebrow="Logg"
+          title="Min fangstlogg"
           description="Hold orden p&aring; alt du har dratt opp."
           icon={<FishIcon className="h-7 w-12" />}
         />

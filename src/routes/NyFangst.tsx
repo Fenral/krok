@@ -37,7 +37,6 @@ export default function NyFangst() {
     <div className="mx-auto max-w-2xl px-4 py-10 md:py-12">
       <PageHeader
         titleId="ny-fangst-title"
-        eyebrow="Ny fangst"
         title="Ny fangst"
         description="Velg art og fyll inn detaljene. Det meste er valgfritt — bare art og sted m&aring; med."
       />

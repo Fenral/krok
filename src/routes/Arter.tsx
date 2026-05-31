@@ -33,7 +33,6 @@ export default function Arter() {
     <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-12">
       <PageHeader
         titleId="arter-title"
-        eyebrow="Artsdatabase"
         title="Norske fiskearter"
         description="Bli kjent med vanlige fiskearter i norske vann og langs kysten."
       />

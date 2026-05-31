@@ -1,4 +1,5 @@
 import { Routes, Route, NavLink, Link, useLocation } from 'react-router-dom'
+import { Fragment } from 'react'
 import Hjem from './routes/Hjem'
 import Login from './routes/Login'
 import Logg from './routes/Logg'
@@ -15,10 +16,17 @@ import HookIcon from './components/HookIcon'
 
 const navItems = [
   { to: '/', label: 'Hjem', end: true },
-  { to: '/logg', label: 'Fangster', end: false },
   { to: '/kart', label: 'Kart', end: false },
+  { to: '/logg', label: 'Logg', end: false },
   { to: '/arter', label: 'Arter', end: false },
   { to: '/profil', label: 'Profil', end: false },
+]
+
+const footerItems = [
+  { to: '/om', label: 'Om' },
+  { to: '/personvern', label: 'Personvern' },
+  { to: '/vilkar', label: 'Vilkår' },
+  { to: '/kontakt', label: 'Kontakt' },
 ]
 
 export default function App() {
@@ -55,11 +63,12 @@ export default function App() {
                     end={item.end}
                     className={({ isActive }) =>
                       [
-                        'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                        'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                        'border-b-2',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
                         isActive
-                          ? 'bg-slate-800/80 text-sky-300'
-                          : 'text-slate-300 hover:bg-slate-800/50 hover:text-slate-100',
+                          ? 'border-sky-400 text-sky-300'
+                          : 'border-transparent text-slate-300 hover:border-slate-600 hover:text-slate-100',
                       ].join(' ')
                     }
                   >
@@ -93,10 +102,11 @@ export default function App() {
                   className={({ isActive }) =>
                     [
                       'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+                      'border-b-2',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
                       isActive
-                        ? 'bg-slate-800/80 text-sky-300'
-                        : 'text-slate-300 hover:bg-slate-800/50 hover:text-slate-100',
+                        ? 'border-sky-400 text-sky-300'
+                        : 'border-transparent text-slate-300 hover:border-slate-600 hover:text-slate-100',
                     ].join(' ')
                   }
                 >
@@ -126,40 +136,27 @@ export default function App() {
       <footer className="mt-12 border-t border-slate-800 bg-slate-950/80">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-slate-400 md:flex-row md:items-center md:justify-between md:px-6">
           <p>&copy; 2026 Krok — norsk fiskedagbok</p>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2">
-            <li>
-              <Link
-                to="/om"
-                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Om
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/personvern"
-                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Personvern
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/vilkar"
-                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Vilk&aring;r
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/kontakt"
-                className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              >
-                Kontakt
-              </Link>
-            </li>
-          </ul>
+          <nav aria-label="Sekundær">
+            <ul className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              {footerItems.map((item, idx) => (
+                <Fragment key={item.to}>
+                  {idx > 0 && (
+                    <li aria-hidden="true" className="text-slate-600">
+                      &middot;
+                    </li>
+                  )}
+                  <li>
+                    <Link
+                      to={item.to}
+                      className="rounded underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                </Fragment>
+              ))}
+            </ul>
+          </nav>
         </div>
       </footer>
     </div>

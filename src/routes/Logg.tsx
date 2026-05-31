@@ -10,15 +10,14 @@ import { useDocumentTitle } from '../lib/useDocumentTitle'
 const fangster: Array<{ id: string; art: string; sted: string; vekt: string; dato: string }> = []
 
 export default function Logg() {
-  useDocumentTitle('Mine fangster — Krok')
+  useDocumentTitle('Min fangstlogg — Krok')
   const harFangster = fangster.length > 0
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-12">
       <PageHeader
         titleId="logg-title"
-        eyebrow="Mine fangster"
-        title="Mine fangster"
+        title="Min fangstlogg"
         description="Hold orden p&aring; fangstene dine — art, sted, vekt og bilder samlet p&aring; ett sted."
         actions={
           harFangster ? (
