@@ -7,6 +7,7 @@ import { Bibliotek } from './routes/Bibliotek'
 import { Bok } from './routes/Bok'
 import { IkkeFunnet } from './routes/IkkeFunnet'
 import { Inngang } from './routes/Inngang'
+import { Portal } from './routes/Portal'
 
 /** Mykt vern: uten avlagt ed sendes man tilbake til pergamentet. */
 function EdKreves({ children }: { children: ReactNode }) {
@@ -27,6 +28,14 @@ export function App() {
     <>
       <Routes>
         <Route path="/" element={<Inngang />} />
+        <Route
+          path="/portal"
+          element={
+            <EdKreves>
+              <Portal />
+            </EdKreves>
+          }
+        />
         <Route
           path="/bibliotek"
           element={
