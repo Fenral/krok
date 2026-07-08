@@ -62,7 +62,7 @@ export function Bibliotek() {
                 onClick={() => void seedDemo()}
                 className="mt-2 font-broedtekst text-sm italic text-lys/70 underline decoration-dotted hover:text-lys"
               >
-                Vis 10 demobøker
+                Vis demobøker
               </button>
             </div>
           ) : (

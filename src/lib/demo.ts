@@ -16,75 +16,48 @@ interface DemoWork {
 }
 
 const T = {
-  nordlys:
-    'Vinden bar med seg lukten av is og gammelt jern da Sigrid steg ut på tunet for siste gang. ' +
-    'Over fjellet sto nordlyset og pustet i grønt og fiolett, som om himmelen selv holdt på en hemmelighet den snart ikke orket å bære lenger.\n\n' +
-    'Hun visste at hun ikke kom til å vende tilbake. Det lå i måten hundene tidde på, i måten døra ikke ville lukke seg helt. ' +
-    'Et sted der ute ventet noe som hadde ventet svært lenge.',
-  nordlys2:
-    'Vinden bar med seg lukten av is og våt ull da Sigrid steg ut på tunet for aller siste gang. ' +
-    'Over fjellet sto nordlyset og pustet i grønt og gull, som om himmelen selv holdt på en hemmelighet den ikke lenger orket å bære alene.\n\n' +
-    'Hun visste at hun ikke ville vende tilbake. Det lå i måten hundene tidde på, i måten døra nektet å lukke seg. ' +
-    'Et sted der ute ventet noe som hadde ventet i århundrer, tålmodig som stein.',
-  bunad:
-    'Det var under bunadssaumen at fru Tønnesen oppdaget den lille lappen, sydd inn i fôret med sting så fine at bare et forstørrelsesglass røpet dem. ' +
-    '«Han lyver om Hardanger», sto det. Ingenting mer.\n\n' +
-    'Hun la ned nåla og kjente hjertet slå et ekstra slag. I trettifem år hadde hun sydd bunader for hele bygda, og aldri hadde et plagg fortalt henne noe slikt.',
-  hav:
-    'Hver morgen gikk hun ned til fjæra og fortalte havet hva hun ikke kunne si til noen andre. ' +
-    'Bølgene tok imot ordene uten å dømme, dro dem med seg ut og la dem igjen et sted der ingen kunne finne dem.\n\n' +
-    'Denne morgenen svarte havet for første gang. Ikke med ord, men med en flaske, grønn og glatt, med noe hvitt sammenrullet inni.',
-  finse:
-    'Siste tog fra Finse gikk klokka 23.47, og Marius rakk det med syv sekunder til gode. ' +
-    'Han visste ikke ennå at kvinnen i kupé fire hadde ventet på nettopp ham, eller at snøen som falt utenfor ville stenge fjellet i tre døgn.\n\n' +
-    'Da lyset flakket og toget stanset mellom to tuneller, forsto han at reisen nettopp hadde begynt.',
-  oppskrift:
-    'Bestemors kokebok luktet av kardemomme og noe eldre, noe man ikke fant navnet på. ' +
-    'Mellom oppskriften på fattigmann og krumkaker lå et ark med en håndskrift som ikke var hennes.\n\n' +
-    'Oppskriften manglet en ingrediens. Der det skulle stått en mengde, sto det bare et navn, og navnet var mitt.',
-  sunnmore:
-    'Tåka la seg over Sunnmøre som et lokk, og med den kom stillheten som alltid varslet at noe var galt. ' +
-    'Lensmann Vik hadde bodd her lenge nok til å kjenne forskjell på vanlig stillhet og den andre sorten.\n\n' +
-    'Nede ved naustet lå en båt som ikke skulle vært der, og i den satt en mann alle trodde hadde druknet for ti år siden.',
-  lofoten:
-    'Da stjernene falt over Lofoten den natten, sto Ingrid og Jonas på moloen og lot som de ikke merket at hendene deres nesten rørte hverandre. ' +
-    'Havet var svart og speilblankt, og hver fallende stjerne trakk en tynn strek gjennom himmelen.\n\n' +
-    '«Ønsk noe», sa han. Hun ønsket seg det umulige, og skammet seg ikke.',
-  trollbundet:
-    'Ingen i landsbyen snakket om skogen etter mørkets frembrudd, og aldri, aldri nevnte de det som bodde der. ' +
-    'Men Even var tolv år og redd for feil ting, og da søsteren hans forsvant mellom trærne, gikk han etter.\n\n' +
-    'Det første han lærte var at troll ikke er dumme. Det andre lærte han for sent.',
-  regnet:
-    'Regnet i Bergen er ikke vær, det er et språk. Det snakker i takrenner og brostein, i paraplyer som vrenges og i folk som later som de ikke har det travelt.\n\n' +
-    'Jeg flyttet hit for å glemme, og byen tok imot meg med åpne, våte armer og hvisket: her får ingen tørke ut minnene sine helt.',
-  vinter:
-    'Vinteren 1743 var den kaldeste noen kunne minnes, og det var da jegerne kom ned fra fjellet med noe de ikke ville snakke om. ' +
-    'Presten skrev i kirkeboka at tre menn døde av kulde. Han skrev ikke hva den fjerde hadde sett.\n\n' +
-    'Historien ble borte i to hundre år, til en ung arkivar fant siden som var revet ut og gjemt.',
+  gille:
+    'Ingen visste hvor Gille kom fra, bare at han var der en morgen, sittende på steinen ved elveosen som om han hadde vokst opp av jorda selv. ' +
+    'Håret hans var grått som novemberhimmel, og øynene fortalte om ting som hadde skjedd før noen av oss ble født.\n\n' +
+    'Bygda tok imot ham slik man tar imot uvær: med senkede blikk og lukkede dører. Men jeg var syv år og redd for feil ting, og jeg gikk rett bort til ham og spurte hva han het.',
+  jeger:
+    'Han jaktet bare når månen var borte. Det var det første barna i Vargdal lærte — at når himmelen ble helt svart, skulle man ikke gå ut, ikke tenne lys, ikke engang trekke pusten for høyt.\n\n' +
+    'For da gikk Nattens jeger langs stiene, og han skilte ikke mellom skyldig og uskyldig. Han tok den som var ute.',
+  jeger2:
+    'Han jaktet bare når månen var borte. Det var det første mødrene i Vargdal hvisket til barna sine — at når himmelen ble helt svart, skulle ingen gå ut, ikke tenne lys, knapt trekke pusten.\n\n' +
+    'For da vandret Nattens jeger langs stiene, og han spurte aldri om skyld eller uskyld. Han tok den han fant, og han fant alltid noen.',
+  satan:
+    'Presten sa at barnet aldri skulle vært født, og at det var en synd bare å se på det. Likevel kom hele bygda til kirken den dagen, for å se med egne øyne det de var blitt forbudt å se.\n\n' +
+    'Jenta i kurven sov rolig, uvitende om alt hun allerede var anklaget for. Hun var tre dager gammel, og hun hadde alt fått et navn ingen turte å si høyt.',
+  ener:
+    'Det står skrevet at én skal fødes med et merke ingen kan forfalske, og at verden skal kjenne ham igjen det året lyset svikter. De fleste trodde det var et eventyr, noe de gamle fortalte for å holde vinteren ut.\n\n' +
+    'Så ble en gutt født den natten sola ikke sto opp, med et merke som brant kaldt mot huden. Og de gamle sluttet å le.',
+  olve:
+    'Olve rakk å skrive tre setninger før hånden sviktet ham, og de tre setningene skulle komme til å styrte en hel ætt. Han visste det da han skrev dem. Det var nettopp derfor han skrev dem.\n\n' +
+    'Blekket var knapt tørt før de kom for å hente arket. Men en mann som har levd lenge nok, vet alltid hvor man gjemmer det som ikke skal finnes.',
+  kveilla:
+    'Kveilla kom aldri før det var mørkt, og hun gikk alltid før det ble lyst, og imellom satt hun ved senga mi og lyttet til alt jeg ikke torde si om dagen. Ingen andre kunne se henne. Det var vår avtale.\n\n' +
+    'Mor sa jeg måtte slutte å snakke med tomrommet i hjørnet. Men tomrommet hadde et navn, og navnet var Kveilla, og hun kjente sannheter om huset vårt som ingen levende burde vite.',
 }
 
 const DEMO: DemoWork[] = [
+  { versions: [{ fileName: 'Gille.docx', modified: '2023-04-19T10:00:00Z', text: T.gille }] },
   {
     versions: [
-      { fileName: 'Nordlysets vokter.docx', modified: '2022-03-14T10:00:00Z', text: T.nordlys },
-      { fileName: 'Nordlysets vokter v2 endelig.docx', modified: '2024-11-02T16:30:00Z', text: T.nordlys2 },
+      { fileName: 'Nattens Jeger.docx', modified: '2022-11-08T13:00:00Z', text: T.jeger },
+      { fileName: 'Nattens Jeger v2 endelig.docx', modified: '2025-02-14T17:30:00Z', text: T.jeger2 },
     ],
   },
-  { versions: [{ fileName: 'Bunadsmysteriet.docx', modified: '2025-05-20T09:15:00Z', text: T.bunad }] },
-  { versions: [{ fileName: 'Hun som talte til havet.docx', modified: '2023-08-01T12:00:00Z', text: T.hav }] },
-  { versions: [{ fileName: 'Siste tog fra Finse.docx', modified: '2025-01-11T20:45:00Z', text: T.finse }] },
+  { versions: [{ fileName: 'Satans Barn.docx', modified: '2024-10-31T23:00:00Z', text: T.satan }] },
   {
     versions: [
-      { fileName: 'Bestemors hemmelige oppskrifter.docx', modified: '2024-02-18T08:00:00Z', text: T.oppskrift },
-      // nesten identisk kopi → flagges som «trolig duplikat»
-      { fileName: 'Bestemors hemmelige oppskrifter kopi.docx', modified: '2024-02-17T08:00:00Z', text: T.oppskrift },
+      { fileName: 'Den Fødte Ener.docx', modified: '2025-03-21T09:00:00Z', text: T.ener },
+      // identisk kopi, eldre dato → flagges som «trolig duplikat»
+      { fileName: 'Den Fødte Ener kopi.docx', modified: '2025-03-20T09:00:00Z', text: T.ener },
     ],
   },
-  { versions: [{ fileName: 'Skyggen over Sunnmøre.docx', modified: '2024-09-09T14:20:00Z', text: T.sunnmore }] },
-  { versions: [{ fileName: 'Da stjernene falt over Lofoten.docx', modified: '2023-12-24T22:00:00Z', text: T.lofoten }] },
-  { versions: [{ fileName: 'Trollbundet.docx', modified: '2025-06-30T11:11:00Z', text: T.trollbundet }] },
-  { versions: [{ fileName: 'Regnet i Bergen.docx', modified: '2021-10-05T07:30:00Z', text: T.regnet }] },
-  { versions: [{ fileName: 'Vinterjakten.docx', modified: '2024-12-01T18:00:00Z', text: T.vinter }] },
+  { versions: [{ fileName: 'Olves Testamente.docx', modified: '2024-06-12T15:20:00Z', text: T.olve }] },
+  { versions: [{ fileName: 'Tanka Til Kveilla.docx', modified: '2025-07-01T20:00:00Z', text: T.kveilla }] },
 ]
 
 export const DEMO_ID_PREFIX = 'demo-'
