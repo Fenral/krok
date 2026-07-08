@@ -8,7 +8,10 @@ import { useLibrary } from '../lib/library'
 // glir opp — så slippes du inn på hylla. Bildene (public/portal/frame-1..5.png)
 // genereres av Nano Banana Pro via scripts/generate-portal.mjs.
 
-const FRAMES = ['frame-1', 'frame-2', 'frame-3', 'frame-4', 'frame-5'].map((f) => `/portal/${f}.webp`)
+// BASE_URL er '/' på Vercel/lokalt og '/krok/' på GitHub Pages
+const FRAMES = ['frame-1', 'frame-2', 'frame-3', 'frame-4', 'frame-5'].map(
+  (f) => `${import.meta.env.BASE_URL}portal/${f}.webp`,
+)
 const SCROLL_HOYDER = 4 // hvor mange skjermhøyder scroll-sporet er (styrer tempoet)
 
 // Opasitet for én frame gitt samlet fremdrift p ∈ [0,1]. Frames sitter jevnt
