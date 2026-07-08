@@ -12,6 +12,7 @@ import type { ImportSummary, Work } from '../types'
 import { groupWorks } from './grouping/groupWorks'
 import { importFiles, type ImportEvent } from './import/importPipeline'
 import { SearchIndex, type SearchHit } from './search/searchIndex'
+import { DEMO_ID_PREFIX, removeDemoLibrary, seedDemoLibrary } from './demo'
 import { storage } from './storage'
 
 interface LibraryState {
@@ -28,6 +29,9 @@ interface LibraryState {
   downloadVersion: (docId: string, fileName: string) => Promise<void>
   getVersionText: (docId: string) => Promise<{ text: string; html: string } | undefined>
   dismissSummary: () => void
+  demoActive: boolean
+  seedDemo: () => Promise<void>
+  removeDemo: () => Promise<void>
 }
 
 const LibraryContext = createContext<LibraryState | null>(null)
@@ -121,6 +125,18 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
 
   const dismissSummary = useCallback(() => setLastSummary(null), [])
 
+  const seedDemo = useCallback(async () => {
+    await seedDemoLibrary(storage)
+    await reload()
+  }, [reload])
+
+  const removeDemo = useCallback(async () => {
+    await removeDemoLibrary(storage)
+    await reload()
+  }, [reload])
+
+  const demoActive = works.some((w) => w.versions.some((v) => v.doc.id.startsWith(DEMO_ID_PREFIX)))
+
   const value = useMemo<LibraryState>(
     () => ({
       ready,
@@ -136,6 +152,9 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       downloadVersion,
       getVersionText,
       dismissSummary,
+      demoActive,
+      seedDemo,
+      removeDemo,
     }),
     [
       ready,
@@ -151,6 +170,9 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       downloadVersion,
       getVersionText,
       dismissSummary,
+      demoActive,
+      seedDemo,
+      removeDemo,
     ],
   )
 

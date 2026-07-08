@@ -11,7 +11,7 @@ import type { SearchHit } from '../lib/search/searchIndex'
 import type { Work } from '../types'
 
 export function Bibliotek() {
-  const { ready, works, resetOath } = useLibrary()
+  const { ready, works, resetOath, seedDemo, removeDemo, demoActive } = useLibrary()
   const navigate = useNavigate()
 
   const apne = (work: Work, spineEl: HTMLElement | null) => {
@@ -56,13 +56,30 @@ export function Bibliotek() {
               <VelgFiler className="mt-6 rounded-full border border-lys/40 bg-natt-800/70 px-7 py-2.5 font-tittel tracking-wide text-lys transition-colors hover:bg-natt-700/80 disabled:opacity-50">
                 Velg Word-filer
               </VelgFiler>
+              <p className="mt-6 font-broedtekst text-sm text-pergament/40">Bare vil se hvordan det ser ut?</p>
+              <button
+                type="button"
+                onClick={() => void seedDemo()}
+                className="mt-2 font-broedtekst text-sm italic text-lys/70 underline decoration-dotted hover:text-lys"
+              >
+                Vis 10 demobøker
+              </button>
             </div>
           ) : (
             <Bokhylle works={works} onOpen={apne} />
           )}
         </section>
 
-        <footer className="absolute bottom-4 left-0 right-0 z-10 text-center">
+        <footer className="absolute bottom-4 left-0 right-0 z-10 flex items-center justify-center gap-4 text-center">
+          {demoActive && (
+            <button
+              type="button"
+              onClick={() => void removeDemo()}
+              className="font-broedtekst text-xs italic text-pergament/30 underline decoration-dotted hover:text-pergament/60"
+            >
+              Fjern demobøker
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
