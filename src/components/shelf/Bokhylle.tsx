@@ -55,7 +55,7 @@ export function Bokhylle({ works, onOpen }: Props) {
     <div ref={rot} className="mx-auto w-full max-w-5xl">
       {hyller.map((rad, i) => (
         <div key={i} className="relative">
-          <div className="hylle-vegg flex min-h-[230px] items-end justify-start gap-[3px] px-8 pt-4">
+          <div className="hylle-vegg flex min-h-[230px] items-end justify-center gap-[3px] px-8 pt-4">
             {rad.map((work) => (
               <Bokrygg
                 key={work.id}

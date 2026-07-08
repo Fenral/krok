@@ -26,7 +26,8 @@ export function Bibliotek() {
     <SlippSone>
       <main className="relative min-h-screen overflow-hidden pb-24">
         <Lys />
-        <header className="relative z-10 px-6 pb-10 pt-12 text-center">
+        {/* z-20 over hylla, ellers legger bokseksjonen seg over søkeresultatene */}
+        <header className="relative z-20 px-6 pb-10 pt-12 text-center">
           <h1 className="font-tittel text-3xl tracking-[0.25em] text-lys drop-shadow-[0_0_12px_rgba(232,182,76,0.35)]">
             KROK-BIBLIOTEKET
           </h1>

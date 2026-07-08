@@ -1,7 +1,15 @@
+import { useEffect } from 'react'
 import { useLibrary } from '../../lib/library'
 
 export function ImportFremdrift() {
   const { importing, importEvents, lastSummary, dismissSummary } = useLibrary()
+
+  // Oppsummeringen forsvinner av seg selv så den ikke blir liggende over footeren
+  useEffect(() => {
+    if (!lastSummary) return
+    const t = setTimeout(dismissSummary, 8000)
+    return () => clearTimeout(t)
+  }, [lastSummary, dismissSummary])
 
   if (importing && importEvents.length) {
     const ferdig = importEvents.filter((e) => e.status.state !== 'venter' && e.status.state !== 'leses').length

@@ -51,13 +51,16 @@ export async function importFiles(
   onEvent: (e: ImportEvent) => void,
 ): Promise<void> {
   const worker = new DocxWorkerClient()
+  // Ids under behandling i denne batchen: to byte-identiske filer kjørt
+  // parallelt ville ellers begge passere hasDoc-sjekken
+  const paagaaende = new Map<string, string>()
   try {
     let next = 0
     const runners = Array.from({ length: Math.min(IMPORT_CONCURRENCY, files.length) }, async () => {
       // Begrenset samtidighet: aldri mer enn ~3 filbuffere i minnet samtidig
       while (next < files.length) {
         const i = next++
-        await importOne(files[i], i, storage, worker, onEvent)
+        await importOne(files[i], i, storage, worker, paagaaende, onEvent)
       }
     })
     await Promise.all(runners)
@@ -71,6 +74,7 @@ async function importOne(
   fileIndex: number,
   storage: StorageAdapter,
   worker: DocxWorkerClient,
+  paagaaende: Map<string, string>,
   onEvent: (e: ImportEvent) => void,
 ): Promise<void> {
   const emit = (status: ImportFileStatus) => onEvent({ fileIndex, fileName: file.name, status })
@@ -84,6 +88,13 @@ async function importOne(
     const modifiedFile = file.lastModified
     const buffer = await file.arrayBuffer()
     const id = await sha256Hex(buffer)
+
+    const alleredeIBatch = paagaaende.get(id)
+    if (alleredeIBatch !== undefined) {
+      emit({ state: 'duplikat', avFileName: alleredeIBatch })
+      return
+    }
+    paagaaende.set(id, file.name)
 
     if (await storage.hasDoc(id)) {
       const eksisterende = (await storage.listDocMetas()).find((m) => m.id === id)
