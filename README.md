@@ -1,57 +1,66 @@
-# Krok — Fiskedagbok (autonom build-loop)
+# Krok — Biblioteket
 
-Norsk fiskedagbok-app bygget av en autonom build-loop. Se [spec](docs/superpowers/specs/2026-05-31-krok-loop-design.md) for full design.
+Et Harry Potter-inspirert, personlig bibliotek for egne bokmanuskripter (.docx).
+Dra inn Word-filene dine — biblioteket sorterer duplikater og versjoner i verk,
+viser når hver versjon sist ble redigert, og lar deg lese og søke i alt sammen.
+Norsk UI, nattmørkt Hogwarts-bibliotek som stemning.
 
-## Setup
+## Kom i gang
 
 ```bash
 npm install
-cp .env.example .env
-# Fyll .env med Supabase-credentials
 npm run dev   # http://localhost:5173
 ```
 
-## Auto-loopen
+1. Skriv eden på pergamentet: **«Jeg lover høytidelig at jeg pønsker på noe galt»**
+   (eller klikk «hvisk eden til meg»). Frasen kan endres i `src/config.ts`.
+2. Dra .docx-filene dine inn hvor som helst på biblioteksiden — gjerne hundrevis
+   på én gang. Filer som er byte-identiske hoppes over som duplikater.
+3. Hylla viser én bok per verk. Klikk en bok for versjonshistorikk (sortert på
+   redigeringsdato), pergamentleser og nedlasting av original .docx.
+4. Søk i titler og fulltekst — treffet flyr ut av hylla (Accio!).
 
-Loopen drives av Claude Code Workflow-tool fra en interaktiv sesjon (ikke shell):
+## Hvordan det virker
 
-### Fishbrain-scrape (én gang før første loop)
+- **Gruppering**: filnavn normaliseres («Hekseboka kopi (2)», «hekseboka ENDELIG
+  v3 12.03.2024» → «hekseboka»), nesten like nøkler slås sammen, og et
+  innholdspass (trigram-likhet på tekstprøver) fanger samme bok lagret under
+  helt ulikt navn. Ren, testdrevet logikk i `src/lib/grouping/`.
+- **Sist redigert**: leses fra docx-ens indre `docProps/core.xml`
+  (`dcterms:modified`); filsystemdatoen brukes som fallback.
+- **Lagring**: alt ligger lokalt i nettleseren (IndexedDB) — originalbytes,
+  fulltekst og metadata i separate stores. Ingen server. Skylagring kan plugges
+  inn senere via `StorageAdapter`-grensesnittet
+  (`src/lib/storage/SupabaseAdapter.stub.ts` beskriver hvordan).
+- **Parsing**: mammoth + fflate i en Web Worker, så hovedtråden (og magien)
+  aldri hakker under bulk-import.
+- **Magien**: én delt canvas med partikkelmotor (stavgnister, støv, glør,
+  Accio-hale) + CSS-keyframes (pustende bøker, Monsterbok-knurring, flakkende
+  lys, blekk som tegner Marauder-kartet). `prefers-reduced-motion` respekteres.
 
-I Claude Code-sesjon:
-
-> Kjør Workflow med scriptPath `eval/fishbrain-scrape.workflow.js`.
-
-Resultat: `eval/reference/INVENTORY.md` + screenshots.
-
-### Hovedloop
-
-> Kjør Workflow med scriptPath `eval/krok-loop.workflow.js`.
-
-Loopen kjører til EN av:
-- 3/4 dommere GREEN (a11y-lead != RED) holdt over 2 runder
-- 10 timer siden start
-- `eval/state.json` har `"manualStop": true`
-- 5 runder stagnasjon + Sivert sier «drop» via ntfy
-
-## Stop loopen
-
-3 måter:
-1. PowerShell: `'{"manualStop":true}' | Set-Content eval/state.json -Encoding utf8`
-2. Send `stop` til ntfy-channel `krok-loop`
-3. Ctrl+C i Claude Code-sesjonen som kjører Workflow
-
-## Tester
+## Kommandoer
 
 ```bash
-npm test            # vitest run
+npm run dev         # utviklingsserver
+npm run build       # produksjonsbygg til dist/
+npm run preview     # server produksjonsbygget
+npm test            # vitest (gruppering, normalisering, lagring, core.xml)
 npm run lint        # eslint
 npm run typecheck   # tsc --noEmit
 ```
 
 ## Mapper
 
-- `src/` — React-app (bygges av loopen)
-- `supabase/migrations/` — schema (apply via Supabase MCP)
-- `eval/` — loop-infrastruktur (Workflow-scripts, reviewers, state)
-- `tools/` — ntfy push/watch, time-cap
-- `docs/superpowers/` — spec + plan
+- `src/lib/grouping/` — normalisering, likhet og grupperingsmotor (kjernen)
+- `src/lib/storage/` — StorageAdapter + IndexedDB-implementasjon
+- `src/lib/import/` — importpipeline + docx-worker
+- `src/lib/search/` — MiniSearch-indeks over titler og fulltekst
+- `src/components/effects/` — partikkelmotor, tryllestav, Accio, Marauder-blekk
+- `src/routes/` — Inngang (eden), Bibliotek (hylla), Bok (leser)
+
+## Verdt å vite
+
+- Biblioteket bor i den nettleseren du bruker det i. Slett nettleserdata =
+  tøm hylla (originalfilene dine på disk påvirkes selvsagt ikke).
+- Eden er stemning, ikke sikkerhet — innholdet er ikke kryptert.
+- «Ugagn utført» nederst på hyllesiden låser pergamentet igjen.

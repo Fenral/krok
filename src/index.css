@@ -1,3 +1,147 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Grunnstemning: nattmørkt bibliotek ─────────────────────────────── */
+body {
+  @apply bg-natt-900 text-pergament;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232, 182, 76, 0.07), transparent),
+    radial-gradient(ellipse 60% 40% at 15% 110%, rgba(74, 44, 23, 0.25), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(74, 44, 23, 0.25), transparent);
+  min-height: 100vh;
+}
+
+.stav-modus,
+.stav-modus * {
+  cursor: none !important;
+}
+
+/* ── Pergament (inngangen og leseren) ───────────────────────────────── */
+.pergament-flate {
+  background-color: theme('colors.pergament.DEFAULT');
+  background-image:
+    radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(120, 90, 40, 0.18) 100%),
+    radial-gradient(circle at 20% 15%, rgba(140, 105, 50, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 85%, rgba(140, 105, 50, 0.1), transparent 40%);
+}
+
+/* ── Leserens typografi ─────────────────────────────────────────────── */
+.leser-tekst p {
+  margin-bottom: 1.1em;
+  line-height: 1.75;
+  font-size: 1.05rem;
+}
+.leser-tekst p:first-child::first-letter {
+  font-family: theme('fontFamily.tittel');
+  font-size: 3.2em;
+  float: left;
+  line-height: 0.85;
+  padding-right: 0.08em;
+  color: #6b1f1a;
+}
+
+/* ── Hylla ──────────────────────────────────────────────────────────── */
+.hylle-vegg {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.15) 30%, transparent 70%),
+    linear-gradient(90deg, theme('colors.tre.900'), theme('colors.tre.700') 12%, theme('colors.tre.700') 88%, theme('colors.tre.900'));
+  border-radius: 3px 3px 0 0;
+}
+.hylle-planke {
+  background: linear-gradient(180deg, theme('colors.tre.500'), theme('colors.tre.900'));
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(232, 182, 76, 0.15);
+}
+
+/* ── Keyframes: magien ──────────────────────────────────────────────── */
+
+/* bøkene puster nesten umerkelig */
+@keyframes pust {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(1.006); }
+}
+.bok-pust {
+  animation: pust 5s ease-in-out infinite alternate;
+}
+
+/* Monsterboken: knurrer og snapper */
+@keyframes knurr {
+  0% { transform: rotate(0deg) translateY(0); }
+  20% { transform: rotate(-3deg) translateY(-7px) skewX(-2deg); }
+  40% { transform: rotate(2.5deg) translateY(-11px) skewX(2deg); }
+  60% { transform: rotate(-2deg) translateY(-6px); }
+  80% { transform: rotate(1.2deg) translateY(-2px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+.bok-knurr {
+  animation: knurr 0.7s ease-in-out;
+}
+
+/* stearinlys: flakkende flamme og sakte sveving */
+@keyframes flakke {
+  0%, 100% { transform: scale(1) translateX(0); opacity: 1; }
+  25% { transform: scale(1.12, 0.92) translateX(0.6px); opacity: 0.92; }
+  50% { transform: scale(0.94, 1.08) translateX(-0.6px); opacity: 1; }
+  75% { transform: scale(1.06, 0.96) translateX(0.3px); opacity: 0.95; }
+}
+.flamme-flakk {
+  animation: flakke 0.9s ease-in-out infinite;
+}
+@keyframes svev {
+  from { transform: translateY(0); }
+  to { transform: translateY(-14px); }
+}
+.lys-svev {
+  animation: svev 5.5s ease-in-out infinite alternate;
+}
+
+/* Marauder-blekket tegner seg selv */
+@keyframes blekklinje {
+  from { stroke-dashoffset: var(--strek-lengde, 1600); }
+  to { stroke-dashoffset: 0; }
+}
+.blekk-strek {
+  stroke-dasharray: var(--strek-lengde, 1600);
+  stroke-dashoffset: var(--strek-lengde, 1600);
+  animation: blekklinje 1.6s ease-out forwards;
+}
+@keyframes blekkfrem {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.blekk-tekst {
+  opacity: 0;
+  animation: blekkfrem 1.4s ease-in forwards;
+}
+
+/* feil ed: pergamentet skjelver */
+@keyframes skjelving {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+.skjelv {
+  animation: skjelving 0.4s ease-in-out;
+}
+
+/* ── Ro for dem som ber om det ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bok-pust,
+  .bok-knurr,
+  .flamme-flakk,
+  .lys-svev,
+  .skjelv {
+    animation: none;
+  }
+  .blekk-strek {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .blekk-tekst {
+    opacity: 1;
+    animation: none;
+  }
+}
