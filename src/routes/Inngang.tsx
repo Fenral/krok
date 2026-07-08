@@ -70,6 +70,12 @@ export function Inngang() {
               Pergamentet forblir tomt. Det var visst ikke helt riktig …
             </p>
           )}
+          <button
+            type="submit"
+            className="mt-8 rounded-full border border-pergament-blekk/50 bg-pergament-dyp/40 px-8 py-3 font-tittel text-lg tracking-wide text-pergament-blekk transition-colors hover:bg-pergament-dyp/70 active:bg-pergament-dyp"
+          >
+            Avlegg eden
+          </button>
         </form>
         <button
           type="button"
