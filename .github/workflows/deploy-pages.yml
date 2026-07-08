@@ -30,6 +30,8 @@ jobs:
           PAGES_BASE: /krok/
           VITE_HASH_ROUTER: '1'
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
