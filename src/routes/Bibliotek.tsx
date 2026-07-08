@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { accioFly } from '../components/effects/accio'
 import { ImportFremdrift } from '../components/import/ImportFremdrift'
 import { SlippSone } from '../components/import/SlippSone'
+import { VelgFiler } from '../components/import/VelgFiler'
 import { Bokhylle } from '../components/shelf/Bokhylle'
 import { Lys } from '../components/shelf/Lys'
 import { Sokefelt } from '../components/search/Sokefelt'
@@ -35,6 +36,11 @@ export function Bibliotek() {
           <div className="mt-8">
             <Sokefelt onAccio={onAccio} />
           </div>
+          {ready && works.length > 0 && (
+            <VelgFiler className="mt-4 rounded-full border border-lys/30 bg-natt-800/60 px-5 py-1.5 font-broedtekst text-sm text-lys/90 transition-colors hover:bg-natt-700/70 disabled:opacity-50">
+              ＋ Legg til bøker
+            </VelgFiler>
+          )}
         </header>
 
         <section className="relative z-10 px-4">
@@ -44,9 +50,12 @@ export function Bibliotek() {
             <div className="mx-auto max-w-md rounded-lg border border-dashed border-lys/25 px-8 py-14 text-center">
               <p className="font-tittel text-xl text-pergament/80">Hylla er tom.</p>
               <p className="mt-3 font-broedtekst italic text-pergament/50">
-                Dra Word-dokumentene dine hit — slipp dem hvor som helst, så sorterer biblioteket dem i verk og
-                versjoner.
+                Dra Word-dokumentene dine hit, eller trykk under for å velge dem — så sorterer biblioteket dem i verk
+                og versjoner.
               </p>
+              <VelgFiler className="mt-6 rounded-full border border-lys/40 bg-natt-800/70 px-7 py-2.5 font-tittel tracking-wide text-lys transition-colors hover:bg-natt-700/80 disabled:opacity-50">
+                Velg Word-filer
+              </VelgFiler>
             </div>
           ) : (
             <Bokhylle works={works} onOpen={apne} />
